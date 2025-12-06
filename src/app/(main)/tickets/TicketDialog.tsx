@@ -33,8 +33,14 @@ export default function TicketDialog({ categories, onCreate }: Props) {
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState("");
   type Priority = "LOW" | "MEDIUM" | "HIGH";
-
   const [priority, setPriority] = useState<Priority>("MEDIUM");
+
+  // Labels humanizados para prioridad
+  const PRIORITY_LABELS: Record<Priority, string> = {
+    LOW: "Baja",
+    MEDIUM: "Media",
+    HIGH: "Alta",
+  };
 
   const handleSubmit = () => {
     onCreate({ title, description, categoryId, priority });
@@ -59,7 +65,7 @@ export default function TicketDialog({ categories, onCreate }: Props) {
         <div className="space-y-4">
           <div>
             <label className="text-sm font-medium">Título</label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ingrese un título" />
           </div>
 
           <div>
@@ -67,6 +73,7 @@ export default function TicketDialog({ categories, onCreate }: Props) {
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              placeholder="Ingrese la descripción del ticket"
             />
           </div>
 
@@ -96,9 +103,9 @@ export default function TicketDialog({ categories, onCreate }: Props) {
                 <SelectValue placeholder="Seleccionar prioridad" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="LOW">LOW</SelectItem>
-                <SelectItem value="MEDIUM">MEDIUM</SelectItem>
-                <SelectItem value="HIGH">HIGH</SelectItem>
+                <SelectItem value="LOW">{PRIORITY_LABELS.LOW}</SelectItem>
+                <SelectItem value="MEDIUM">{PRIORITY_LABELS.MEDIUM}</SelectItem>
+                <SelectItem value="HIGH">{PRIORITY_LABELS.HIGH}</SelectItem>
               </SelectContent>
             </Select>
           </div>

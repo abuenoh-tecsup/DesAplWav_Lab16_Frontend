@@ -11,6 +11,14 @@ const STATUS_MESSAGES: Record<TicketStatus, string> = {
   CLOSED: "El ticket está cerrado y completado.",
 };
 
+// Labels humanizados
+const STATUS_LABELS: Record<TicketStatus, string> = {
+  OPEN: "Abierto",
+  IN_PROGRESS: "En progreso",
+  RESOLVED: "Resuelto",
+  CLOSED: "Cerrado",
+};
+
 export default function TicketProgress({ status, className }: Props) {
   const currentIndex = TICKET_STATUS.indexOf(status);
 
@@ -23,17 +31,13 @@ export default function TicketProgress({ status, className }: Props) {
           const isActive = index <= currentIndex;
           return (
             <div key={s} className="flex flex-col items-center relative flex-1">
-              {/* Línea horizontal de conexión */}
+              {/* Línea horizontal */}
               {index < TICKET_STATUS.length - 1 && (
                 <div
                   className={`absolute top-5 left-1/2 h-1 ${
                     index < currentIndex ? "bg-blue-600" : "bg-gray-300"
                   }`}
-                  style={{ 
-                    width: 'calc(100% - 40px)',
-                    marginLeft: '20px',
-                    zIndex: 0 
-                  }}
+                  style={{ width: 'calc(100% - 40px)', marginLeft: '20px', zIndex: 0 }}
                 />
               )}
               {/* Bolita */}
@@ -45,8 +49,10 @@ export default function TicketProgress({ status, className }: Props) {
               >
                 {index + 1}
               </div>
-              {/* Etiqueta del estado */}
-              <span className="text-sm mt-2 font-medium text-gray-700 text-center">{s}</span>
+              {/* Label humanizado */}
+              <span className="text-sm mt-2 font-medium text-gray-700 text-center">
+                {STATUS_LABELS[s] ?? s}
+              </span>
             </div>
           );
         })}

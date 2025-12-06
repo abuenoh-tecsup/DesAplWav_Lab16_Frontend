@@ -22,39 +22,45 @@ export default function TicketFilters({
   setPriorityFilter,
 }: Props) {
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-6">
       {/* Status Filter */}
-      <Select
-        value={statusFilter || "ALL"}
-        onValueChange={(val) => setStatusFilter(val === "ALL" ? "" : val)}
-      >
-        <SelectTrigger className="w-48">
-          <SelectValue placeholder="Filtrar por Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">Todos</SelectItem>
-          <SelectItem value="OPEN">OPEN</SelectItem>
-          <SelectItem value="IN_PROGRESS">IN_PROGRESS</SelectItem>
-          <SelectItem value="RESOLVED">RESOLVED</SelectItem>
-          <SelectItem value="CLOSED">CLOSED</SelectItem>
-        </SelectContent>
-      </Select>
+      <div className="flex flex-col">
+        <label className="text-sm font-medium mb-1">Estado</label>
+        <Select
+          value={statusFilter || "ALL"}
+          onValueChange={(val) => setStatusFilter(val === "ALL" ? "" : val)}
+        >
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Selecciona Estado" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">Todos</SelectItem>
+            <SelectItem value="OPEN">Abierto</SelectItem>
+            <SelectItem value="IN_PROGRESS">En progreso</SelectItem>
+            <SelectItem value="RESOLVED">Resuelto</SelectItem>
+            <SelectItem value="CLOSED">Cerrado</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       {/* Priority Filter */}
-      <Select
-        value={priorityFilter || "ALL"}
-        onValueChange={(val) => setPriorityFilter(val === "ALL" ? "" : val)}
-      >
-        <SelectTrigger className="w-48">
-          <SelectValue placeholder="Filtrar por Prioridad" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">Todos</SelectItem>
-          <SelectItem value="LOW">LOW</SelectItem>
-          <SelectItem value="MEDIUM">MEDIUM</SelectItem>
-          <SelectItem value="HIGH">HIGH</SelectItem>
-        </SelectContent>
-      </Select>
+      <div className="flex flex-col">
+        <label className="text-sm font-medium mb-1">Prioridad</label>
+        <Select
+          value={priorityFilter || "ALL"}
+          onValueChange={(val) => setPriorityFilter(val === "ALL" ? "" : val)}
+        >
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Selecciona Prioridad" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">Todos</SelectItem>
+            <SelectItem value="LOW">Baja</SelectItem>
+            <SelectItem value="MEDIUM">Media</SelectItem>
+            <SelectItem value="HIGH">Alta</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }

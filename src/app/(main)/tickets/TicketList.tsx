@@ -13,6 +13,13 @@ export default function TicketList({ tickets }: Props) {
     return <p className="text-center text-gray-500">No hay tickets que coincidan con los filtros</p>;
   }
 
+  const statusLabels: Record<Ticket["status"], string> = {
+    OPEN: "Abierto",
+    IN_PROGRESS: "En progreso",
+    RESOLVED: "Resuelto",
+    CLOSED: "Cerrado",
+  };
+
   const statusColor = (status: Ticket["status"]) => {
     switch (status) {
       case "OPEN":
@@ -25,6 +32,25 @@ export default function TicketList({ tickets }: Props) {
         return "bg-gray-100 text-gray-800";
       default:
         return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const priorityLabels: Record<Ticket["priority"], string> = {
+    LOW: "Baja",
+    MEDIUM: "Media",
+    HIGH: "Alta",
+  };
+
+  const priorityColor = (priority: Ticket["priority"]) => {
+    switch (priority) {
+      case "LOW":
+        return "bg-green-200 text-green-900";
+      case "MEDIUM":
+        return "bg-yellow-200 text-yellow-900";
+      case "HIGH":
+        return "bg-red-200 text-red-900";
+      default:
+        return "bg-gray-200 text-gray-800";
     }
   };
 
@@ -43,14 +69,27 @@ export default function TicketList({ tickets }: Props) {
                 {ticket.Category?.name || "Sin categoría"}
               </CardDescription>
             </div>
-            <span className={`px-2 py-1 rounded-full text-sm font-medium ${statusColor(ticket.status)}`}>
-              {ticket.status.replace("_", " ")}
-            </span>
+
+            <div className="flex flex-col gap-1 items-end">
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-medium ${statusColor(ticket.status)}`}
+              >
+                {statusLabels[ticket.status] || ticket.status}
+              </span>
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-medium ${priorityColor(ticket.priority)}`}
+              >
+                {priorityLabels[ticket.priority] || ticket.priority}
+              </span>
+            </div>
           </CardHeader>
 
           <CardContent>
-            <p className="text-gray-700">{ticket.description.substring(0, 120)}{ticket.description.length > 120 ? "..." : ""}</p>
-            <p className="mt-2 text-sm text-gray-500">Prioridad: {ticket.priority}</p>
+            <p className="text-gray-700">
+              {ticket.description.length > 120
+                ? ticket.description.substring(0, 120) + "..."
+                : ticket.description}
+            </p>
           </CardContent>
         </Card>
       ))}
