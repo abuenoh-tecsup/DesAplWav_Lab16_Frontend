@@ -20,16 +20,25 @@ export default function LoginPage() {
   const { register, handleSubmit, formState } = useForm<LoginForm>();
   const { errors } = formState;
 
+  // Función para redirigir según rol
+  const redirectByRole = (role: string) => {
+    if (role === "ADMIN") router.push("/assignTicket");
+    else if (role === "AGENT") router.push("/agent");
+    else router.push("/dashboard");
+  };
+
   // ✅ Verificar sesión activa al montar la página
   useEffect(() => {
     const checkSession = async () => {
       try {
         const res = await fetch(`${BACKEND_URL}/api/users/me`, {
           method: "GET",
-          credentials: "include", // ← enviar cookies
+          credentials: "include",
         });
+
         if (res.ok) {
-          router.push("/dashboard"); // ya logueado → ir al dashboard
+          const user = await res.json();
+          redirectByRole(user.role); // redirigir según rol
         }
       } catch (err) {
         console.error("No hay sesión activa:", err);
@@ -42,7 +51,7 @@ export default function LoginPage() {
     try {
       const res = await fetch(`${BACKEND_URL}/api/auth/signin`, {
         method: "POST",
-        credentials: "include", // ← guardar cookie httpOnly
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
@@ -52,8 +61,17 @@ export default function LoginPage() {
         return;
       }
 
-      // Cookie httpOnly guardada automáticamente
-      router.push("/dashboard");
+      // Obtener usuario recién logueado y redirigir según rol
+      const userRes = await fetch(`${BACKEND_URL}/api/users/me`, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (userRes.ok) {
+        const user = await userRes.json();
+        redirectByRole(user.role);
+      } else {
+        router.push("/dashboard"); // fallback
+      }
     } catch (error) {
       console.error(error);
       alert("Error de red");

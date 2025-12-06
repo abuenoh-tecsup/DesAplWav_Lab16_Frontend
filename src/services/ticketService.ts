@@ -42,7 +42,7 @@ export const ticketService = {
     priority?: string;
   }) => {
     const res = await apiClient(`${BASE}/${id}`, {
-      method: "PUT",
+      method: "PATCH",
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error("Error actualizando ticket");

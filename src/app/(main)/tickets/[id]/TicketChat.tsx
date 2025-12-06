@@ -22,6 +22,7 @@ export default function TicketChat({ ticketId }: Props) {
     const fetchMessages = async () => {
       try {
         const msgs = await ticketService.getMessages(ticketId);
+        msgs.sort((a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
         setMessages(msgs);
       } catch (err) {
         console.error("Error obteniendo mensajes:", err);

@@ -14,7 +14,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
 
 export function AppSidebar() {
   const router = useRouter();
@@ -55,11 +56,21 @@ export function AppSidebar() {
   };
 
   const items = [
-    { title: "Dashboard", url: "/dashboard", icon: Home },
-    { title: "Tickets", url: "/tickets", icon: Inbox },
-    { title: "Calendar", url: "/calendar", icon: Calendar },
-    { title: "Settings", url: "/settings", icon: Settings },
+    // Rutas para todos los usuarios
+    { title: "Dashboard", url: "/dashboard", icon: Home, roles: ["USER"] },
+    { title: "Tickets", url: "/tickets", icon: Inbox, roles: ["USER"] },
+    { title: "Calendar", url: "/calendar", icon: Calendar, roles: ["USER"] },
+    // Rutas solo para ADMIN
     { title: "Categorías", url: "/categories", icon: Layers, roles: ["ADMIN"] },
+    {
+      title: "Asignar Tickets",
+      url: "/assignTicket",
+      icon: Layers,
+      roles: ["ADMIN"],
+    },
+
+    // Rutas solo para AGENT
+    { title: "Mis Tickets", url: "/agent", icon: Inbox, roles: ["AGENT"] },
   ];
 
   // Mientras carga, podemos devolver null o un loader
@@ -76,11 +87,17 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {items
-                .filter(item => !item.roles || (userRole && item.roles.includes(userRole)))
+                .filter(
+                  (item) =>
+                    !item.roles || (userRole && item.roles.includes(userRole))
+                )
                 .map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <a className="flex items-center gap-3 py-2 px-3 rounded hover:bg-gray-100" href={item.url}>
+                      <a
+                        className="flex items-center gap-3 py-2 px-3 rounded hover:bg-gray-100"
+                        href={item.url}
+                      >
                         <item.icon />
                         <span>{item.title}</span>
                       </a>

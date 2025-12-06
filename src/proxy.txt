@@ -1,13 +1,15 @@
 import { NextResponse, NextRequest } from "next/server";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Ignorar archivos internos de Next
+  // Ignorar archivos internos de Next y la API
   if (
     pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
     pathname === "/favicon.ico"
   ) {
     return NextResponse.next();
@@ -17,18 +19,18 @@ export async function proxy(request: NextRequest) {
   const publicRoutes = ["/", "/login", "/register"];
   const isPublic = publicRoutes.includes(pathname);
 
-  // Leer cookies (incluyendo HttpOnly del backend)
-  const cookieHeader = request.cookies.toString();
+  // Construir header de cookies correctamente
+  const cookieHeader = request.cookies
+    .getAll()
+    .map(({ name, value }) => `${name}=${value}`)
+    .join("; ");
 
   // Obtener usuario desde el backend
   let user = null;
-
   try {
-    const res = await fetch(`${BACKEND_URL}/api/auth/me`, {
+    const res = await fetch(`${BACKEND_URL}/api/users/me`, {
       method: "GET",
-      headers: {
-        cookie: cookieHeader, // reenviar cookie al backend
-      },
+      headers: { cookie: cookieHeader },
     });
 
     if (res.ok) {
@@ -40,8 +42,13 @@ export async function proxy(request: NextRequest) {
 
   const isLoggedIn = !!user;
 
-  // 1️⃣ Ruta pública + logueado → dashboard
+  // 1️⃣ Ruta pública + logueado → redirigir al dashboard correspondiente
   if (isPublic && isLoggedIn) {
+    // Redirigir según rol
+    if (user.role === "ADMIN")
+      return NextResponse.redirect(new URL("/assignTicket", request.url));
+    if (user.role === "AGENT")
+      return NextResponse.redirect(new URL("/agent", request.url));
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
@@ -51,17 +58,19 @@ export async function proxy(request: NextRequest) {
   }
 
   // 3️⃣ Protección por roles
-  if (pathname.startsWith("/admin") && user?.role !== "ADMIN") {
+  if (pathname.startsWith("/assignTicket") && user?.role !== "ADMIN") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  if (pathname.startsWith("/agent") && !["ADMIN", "AGENT"].includes(user?.role)) {
+  if (pathname.startsWith("/agent") && user?.role !== "AGENT") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
+
+  // Opcional: otras protecciones según rutas futuras
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next|favicon.ico).*)"],
+  matcher: ["/((?!_next|favicon.ico|api/).*)"],
 };
