@@ -22,6 +22,16 @@ export type TicketStatus = (typeof TICKET_STATUS)[number];
 export const PRIORITY = ["LOW", "MEDIUM", "HIGH"] as const;
 export type Priority = (typeof PRIORITY)[number];
 
+export type Message = {
+  id: string;
+  content: string;
+  ticketId: string;
+  authorId: string;
+  author?: User;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type Ticket = {
   id: string;
   title: string;
@@ -29,9 +39,14 @@ export type Ticket = {
   status: TicketStatus;
   priority: Priority;
   categoryId: string;
-  category?: Category;
   userId: string;      // creador
   agentId?: string;    // asignado
   createdAt: string;
   updatedAt: string;
+
+  // Relaciones según el backend
+  Category?: Category;
+  User?: User;
+  Agent?: User | null;
+  Messages?: Message[];
 };
