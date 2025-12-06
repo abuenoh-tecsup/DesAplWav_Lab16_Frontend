@@ -1,0 +1,67 @@
+import { NextResponse, NextRequest } from "next/server";
+
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
+
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Ignorar archivos internos de Next
+  if (
+    pathname.startsWith("/_next") ||
+    pathname === "/favicon.ico"
+  ) {
+    return NextResponse.next();
+  }
+
+  // Rutas públicas
+  const publicRoutes = ["/", "/login", "/register"];
+  const isPublic = publicRoutes.includes(pathname);
+
+  // Leer cookies (incluyendo HttpOnly del backend)
+  const cookieHeader = request.cookies.toString();
+
+  // Obtener usuario desde el backend
+  let user = null;
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/auth/me`, {
+      method: "GET",
+      headers: {
+        cookie: cookieHeader, // reenviar cookie al backend
+      },
+    });
+
+    if (res.ok) {
+      user = await res.json();
+    }
+  } catch (err) {
+    console.error("Error verificando sesión:", err);
+  }
+
+  const isLoggedIn = !!user;
+
+  // 1️⃣ Ruta pública + logueado → dashboard
+  if (isPublic && isLoggedIn) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  // 2️⃣ Ruta privada + NO logueado → login
+  if (!isPublic && !isLoggedIn) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // 3️⃣ Protección por roles
+  if (pathname.startsWith("/admin") && user?.role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  if (pathname.startsWith("/agent") && !["ADMIN", "AGENT"].includes(user?.role)) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/((?!_next|favicon.ico).*)"],
+};
