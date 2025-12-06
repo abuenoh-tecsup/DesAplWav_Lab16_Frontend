@@ -30,7 +30,7 @@ export const categoryService = {
   // Actualizar categoría
   update: async (id: string, payload: { name: string }) => {
     const res = await apiClient(`${BASE}/${id}`, {
-      method: "PUT",
+      method: "PATCH",  // ← Cambiado a PATCH
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error("Error actualizando categoría");

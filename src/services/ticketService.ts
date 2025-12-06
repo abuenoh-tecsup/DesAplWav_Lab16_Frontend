@@ -61,7 +61,7 @@ export const ticketService = {
 
   addMessage: async (
     ticketId: string,
-    payload: { authorId: string; content: string }
+    payload: { content: string } // solo enviamos el contenido
   ) => {
     const res = await apiClient(`${BASE}/${ticketId}/messages`, {
       method: "POST",
