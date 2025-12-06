@@ -11,7 +11,7 @@ export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
-  // Load categories
+  // Cargar categorías
   useEffect(() => {
     categoryService.getAll().then(setCategories).catch(console.error);
   }, []);
@@ -33,30 +33,37 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Columna izquierda */}
-      <div className="lg:col-span-2 space-y-4">
+    <div className="p-4 md:p-8 flex flex-col gap-6">
+      {/* Dialog ocupa todo el ancho */}
+      <div>
         <CategoryDialog onCreate={handleCreate} />
-        <CategoryList 
-          categories={categories} 
-          onSelect={setSelectedCategory} 
-          selectedCategory={selectedCategory} 
-        />
       </div>
 
-      {/* Columna derecha */}
-      <div>
-        {selectedCategory ? (
-          <CategoryForm 
-            category={selectedCategory} 
-            onUpdate={handleUpdate} 
-            onDelete={handleDelete} 
+      {/* Contenedor horizontal: listado + formulario */}
+      <div className="flex gap-6">
+        {/* Listado */}
+        <div className="flex-1 h-[70vh] overflow-auto">
+          <CategoryList 
+            categories={categories} 
+            onSelect={setSelectedCategory} 
+            selectedCategory={selectedCategory} 
           />
-        ) : (
-          <div className="p-6 border rounded-lg text-gray-500">
-            Selecciona una categoría para editarla
-          </div>
-        )}
+        </div>
+
+        {/* Formulario de edición */}
+        <div className="flex-1 h-[70vh]">
+          {selectedCategory ? (
+            <CategoryForm 
+              category={selectedCategory} 
+              onUpdate={handleUpdate} 
+              onDelete={handleDelete} 
+            />
+          ) : (
+            <div className="p-6 border rounded-lg text-gray-500 h-full flex items-center justify-center">
+              Selecciona una categoría para editarla
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
