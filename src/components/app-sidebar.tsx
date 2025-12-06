@@ -1,7 +1,7 @@
 // components/app-sidebar.tsx
 "use client";
 
-import { Home, Inbox, Calendar, Search, Settings, LogOut } from "lucide-react";
+import { Home, Inbox, Calendar, Search, Settings, LogOut, FolderOpen } from "lucide-react";
 import { signOut } from "next-auth/react";
 import {
   Sidebar,
@@ -17,6 +17,7 @@ import {
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Tickets", url: "/tickets", icon: Inbox },
+  { title: "Categorías", url: "/categories", icon: FolderOpen },
   { title: "Calendar", url: "/calendar", icon: Calendar },
   { title: "Search", url: "/search", icon: Search },
   { title: "Settings", url: "/settings", icon: Settings },
