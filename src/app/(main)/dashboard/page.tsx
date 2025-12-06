@@ -8,7 +8,8 @@ import { ticketService } from "@/services/ticketService";
 import { Ticket } from "@/types";
 import { useRouter } from "next/navigation";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -78,7 +79,9 @@ export default function DashboardPage() {
   const stats = {
     abiertos: tickets.filter((t) => t.status === "OPEN").length,
     enProgreso: tickets.filter((t) => t.status === "IN_PROGRESS").length,
-    cerrados: tickets.filter((t) => t.status === "RESOLVED" || t.status === "CLOSED").length,
+    cerrados: tickets.filter(
+      (t) => t.status === "RESOLVED" || t.status === "CLOSED"
+    ).length,
   };
 
   return (
@@ -90,16 +93,19 @@ export default function DashboardPage() {
       </div>
 
       {/* Tarjeta de creación de ticket */}
-      <CreateTicketCard />
+      <div className="w-full">
+        <CreateTicketCard />
+      </div>
 
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Lista de tickets - 2/3 */}
-        <div className="lg:flex-2">
+      {/* Contenido principal: tickets y estadísticas */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Lista de tickets - ocupa 2/3 en lg */}
+        <div className="lg:col-span-2">
           <TicketListCard tickets={tickets} loading={loading} />
         </div>
 
-        {/* Estadísticas - 1/3 */}
-        <div className="lg:flex-1">
+        {/* Estadísticas - ocupa 1/3 en lg */}
+        <div className="lg:col-span-1">
           <StatsCard stats={stats} />
         </div>
       </div>

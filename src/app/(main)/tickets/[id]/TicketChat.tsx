@@ -7,9 +7,9 @@ import { useState, useEffect, useRef } from "react";
 import { ticketService } from "@/services/ticketService";
 import { Message } from "@/types";
 
-type Props = { ticketId: string };
+type Props = { ticketId: string; className?: string };
 
-export default function TicketChat({ ticketId }: Props) {
+export default function TicketChat({ ticketId, className }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -56,7 +56,7 @@ export default function TicketChat({ ticketId }: Props) {
   };
 
   return (
-    <Card className="flex flex-col h-full">
+    <Card className={`flex flex-col h-full ${className ?? ""}`}>
       <CardHeader>
         <CardTitle>Chat del Ticket</CardTitle>
       </CardHeader>

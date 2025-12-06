@@ -77,10 +77,11 @@ export function AppSidebar() {
   if (loading) return <div className="w-64 p-6">Cargando menú...</div>;
 
   return (
-    <Sidebar className="w-64 border-r border-gray-200 bg-white">
-      <SidebarContent>
+    <Sidebar className="w-64 bg-black border-r border-gray-900">
+      <SidebarContent className="bg-[rgb(31,31,31)]">
         <SidebarGroup className="py-6">
-          <SidebarGroupLabel className="text-xl font-bold text-gray-900 mb-4">
+          {/* Label */}
+          <SidebarGroupLabel className="text-white text-xl font-bold mb-4">
             Solvio
           </SidebarGroupLabel>
 
@@ -95,23 +96,24 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                       <a
-                        className="flex items-center gap-3 py-2 px-3 rounded hover:bg-gray-100"
                         href={item.url}
+                        className="flex items-center gap-3 py-2 px-3 rounded text-white hover:bg-gray-800"
                       >
-                        <item.icon />
+                        <item.icon className="w-5 h-5 text-white" />
                         <span>{item.title}</span>
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
 
+              {/* Logout */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-3 py-2 px-3 rounded w-full text-left hover:bg-gray-100"
+                    className="flex items-center gap-3 py-2 px-3 rounded w-full text-left text-white hover:bg-gray-800"
                   >
-                    <LogOut />
+                    <LogOut className="w-5 h-5 text-white" />
                     <span>Logout</span>
                   </button>
                 </SidebarMenuButton>

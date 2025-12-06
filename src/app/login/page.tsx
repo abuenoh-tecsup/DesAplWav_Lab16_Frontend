@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type LoginForm = {
   email: string;
@@ -27,7 +28,7 @@ export default function LoginPage() {
     else router.push("/dashboard");
   };
 
-  // ✅ Verificar sesión activa al montar la página
+  // Verificar sesión activa al montar la página
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -38,7 +39,7 @@ export default function LoginPage() {
 
         if (res.ok) {
           const user = await res.json();
-          redirectByRole(user.role); // redirigir según rol
+          redirectByRole(user.role);
         }
       } catch (err) {
         console.error("No hay sesión activa:", err);
@@ -79,9 +80,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-50">
+    <div className="flex justify-center items-center h-screen body-pattern">
       <Card className="w-96 p-6 shadow-lg">
-        <CardHeader>
+        <CardHeader className="flex flex-col items-center gap-4">
+          {/* Logo */}
+          <Image
+            src="/images/solvio_logo.png"
+            alt="Solvio Logo"
+            width={150} // ajustar según tu diseño
+            height={50} // ajustar según tu diseño
+            priority
+          />
           <CardTitle className="text-center">Iniciar sesión</CardTitle>
         </CardHeader>
 

@@ -92,10 +92,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <div className="flex h-screen w-screen">
         <AppSidebar />
-        <main className="flex-1 p-8 overflow-auto">
-          <SidebarTrigger />
-          {children}
-        </main>
+<main className="flex-1 p-8 overflow-auto body-pattern-light">
+  <SidebarTrigger />
+  {children}
+</main>
+
       </div>
     </SidebarProvider>
   );

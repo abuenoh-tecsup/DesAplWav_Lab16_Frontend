@@ -20,7 +20,8 @@ export default function TicketDetailPage() {
   useEffect(() => {
     if (!ticketId) return;
 
-    ticketService.getById(ticketId)
+    ticketService
+      .getById(ticketId)
       .then(setTicket)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
@@ -31,16 +32,22 @@ export default function TicketDetailPage() {
   if (!ticket) return <p className="text-center mt-8">Ticket no encontrado</p>;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {/* Columna principal (Info + Progreso) */}
-      <div className="col-span-1 md:col-span-1 lg:col-span-2 space-y-6">
-        <TicketInfoCard ticket={ticket} />
-        <TicketProgress status={ticket.status} />
+    <div className="p-4 sm:p-6 md:p-8 h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+      {/* Columna izquierda: Info + Progreso */}
+      <div className="flex flex-col gap-6 h-full">
+        <TicketInfoCard ticket={ticket} className="flex-1 max-h-full" />
+        <TicketProgress
+          status={ticket.status}
+          className="flex-1 max-h-full overflow-auto"
+        />
       </div>
 
-      {/* Columna secundaria (Chat) */}
-      <div className="col-span-1">
-        <TicketChat ticketId={ticket.id} />
+      {/* Columna derecha: Chat */}
+      <div className="flex flex-col h-full">
+        <TicketChat
+          ticketId={ticket.id}
+          className="flex-1 max-h-full overflow-auto"
+        />
       </div>
     </div>
   );

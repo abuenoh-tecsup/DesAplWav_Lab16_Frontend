@@ -18,11 +18,13 @@ export default function StatsCard({ stats }: Props) {
   ];
 
   return (
-    <Card className="flex-1 p-6">
+    <Card className="flex flex-col h-full p-6">
       <CardHeader>
         <CardTitle>Estadísticas</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+
+      {/* Hacer que CardContent ocupe todo el espacio disponible */}
+      <CardContent className="flex flex-col gap-4 flex-1">
         {statsData.map((stat) => (
           <div
             key={stat.label}
@@ -32,6 +34,9 @@ export default function StatsCard({ stats }: Props) {
             <span className="text-2xl font-bold">{stat.value}</span>
           </div>
         ))}
+
+        {/* Empujar elementos al tope si quieres que las tarjetas llenen espacio */}
+        <div className="flex-1" />
       </CardContent>
     </Card>
   );

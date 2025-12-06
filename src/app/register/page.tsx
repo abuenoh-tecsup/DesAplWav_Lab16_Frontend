@@ -8,6 +8,7 @@ import { apiClient } from "@/lib/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Image from "next/image";
 
 type RegisterForm = {
   name: string;
@@ -15,7 +16,8 @@ type RegisterForm = {
   password: string;
 };
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -67,16 +69,35 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-50">
+    <div className="flex justify-center items-center h-screen body-pattern">
       <Card className="w-96 p-6 shadow-lg">
-        <CardHeader>
+        <CardHeader className="flex flex-col items-center gap-4">
+          {/* Logo */}
+          <Image
+            src="/images/solvio_logo.png"
+            alt="Solvio Logo"
+            width={150} // ajustar según tu diseño
+            height={50} // ajustar según tu diseño
+            priority
+          />
           <CardTitle className="text-center">Crear cuenta</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
             <Input placeholder="Nombre" {...formRegister("name")} />
-            <Input placeholder="Email" type="email" {...formRegister("email")} />
-            <Input placeholder="Password" type="password" {...formRegister("password")} />
+            <Input
+              placeholder="Email"
+              type="email"
+              {...formRegister("email")}
+            />
+            <Input
+              placeholder="Password"
+              type="password"
+              {...formRegister("password")}
+            />
             <Button type="submit">Registrarse</Button>
           </form>
 
